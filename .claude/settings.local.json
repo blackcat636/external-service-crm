@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(del \"c:\\\\Users\\\\pinin\\\\OneDrive\\\\Desktop\\\\contentzavod\\\\app\\\\api\\\\videos\\\\delete\\\\route.ts\")",
+      "Bash(ls:*)",
+      "Bash(head:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(npm i:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx next build)",
+      "Bash(curl:*)",
+      "Bash(npm view:*)",
+      "Bash(npm audit:*)",
+      "Bash(node:*)"
+    ]
+  }
+}
