@@ -3,8 +3,10 @@
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { SentientSphere } from "@/components/sentient-sphere";
+import { Button } from "@/components/shared/Button";
 
 function LoginContent() {
   const { isAuthenticated, isLoading, initiateSSO } = useAuth();
@@ -12,22 +14,33 @@ function LoginContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Check if there's a code parameter (SSO callback)
+    const code = searchParams.get("code");
+    if (code) {
+      router.push(`/sso-callback?code=${code}`);
+      return;
+    }
+
+    // If already authenticated, redirect to dashboard
     if (!isLoading && isAuthenticated) {
       router.push("/dashboard");
-    } else if (!isLoading && !isAuthenticated) {
-      // Check if there's a code parameter (SSO callback)
-      const code = searchParams.get("code");
-      if (code) {
-        // Redirect to SSO callback handler
-        router.push(`/sso-callback?code=${code}`);
-        return;
-      }
-      // Auto-redirect to SSO
-      initiateSSO();
     }
-  }, [isLoading, isAuthenticated, router, searchParams, initiateSSO]);
+  }, [isLoading, isAuthenticated, router, searchParams]);
+
+  const handleLogin = () => {
+    initiateSSO();
+  };
 
   if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // If already authenticated, show loading while redirecting
+  if (isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -64,17 +77,33 @@ function LoginContent() {
           </h1>
         </motion.div>
 
-        {/* Loading State */}
+        {/* Login Form */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="w-full max-w-sm text-center"
+          className="w-full max-w-sm"
         >
-          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-mono text-xs text-white/40 uppercase tracking-widest">
-            Redirecting to authentication...
-          </p>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8">
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-medium text-white mb-2">
+                Увійти в систему
+              </h2>
+              <p className="text-sm text-white/50">
+                Авторизуйтесь через сервіс AIPills для доступу до платформи
+              </p>
+            </div>
+
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full"
+              onClick={handleLogin}
+            >
+              <LogIn className="h-5 w-5 mr-2" />
+              Авторизуватись через сервіс AIPills
+            </Button>
+          </div>
         </motion.div>
 
         {/* Bottom Indicator */}
