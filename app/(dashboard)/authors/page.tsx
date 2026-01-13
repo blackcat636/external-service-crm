@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 
 import { Users } from "lucide-react";
 import { useAuthors } from "@/hooks/useAuthors";

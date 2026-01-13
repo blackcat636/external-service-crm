@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 
 import { useCallback } from "react";
 import { FileText, RefreshCw } from "lucide-react";

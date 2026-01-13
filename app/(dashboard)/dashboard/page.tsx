@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 
 import { Instagram, Users, Video, Eye } from "lucide-react";
 import { useDashboard } from "@/hooks/useDashboard";

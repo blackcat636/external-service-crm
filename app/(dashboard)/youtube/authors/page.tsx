@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 
 import { PlaceholderPage } from "@/components/shared/PlaceholderPage";
 

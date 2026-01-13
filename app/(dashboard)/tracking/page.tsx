@@ -1,4 +1,5 @@
 "use client";
+export const runtime = 'edge';
 
 import { Video } from "lucide-react";
 import { useVideos } from "@/hooks/useVideos";
