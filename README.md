@@ -42,8 +42,11 @@ npm run dev
 `.env.local`:
 
 ```env
-# External Backend Service URL
-NEXT_PUBLIC_EXTERNAL_SERVICE_URL=http://localhost:3001
+# Фронтенд основного сервісу (для SSO initiate)
+NEXT_PUBLIC_EXTERNAL_SERVICE_URL=http://localhost:3000
+
+# Бекенд стороннього сервісу (для SSO exchange та API запитів)
+NEXT_PUBLIC_EXTERNAL_SERVICE_BACKEND_URL=http://localhost:3001
 ```
 
 ## Project Structure
@@ -194,12 +197,13 @@ contentzavod/
 
 1. **User opens app** → checks for service token
 2. **If token missing/invalid:**
-   - Frontend redirects to `{EXTERNAL_SERVICE_URL}/auth/sso/initiate`
+   - Frontend redirects to `{EXTERNAL_SERVICE_URL}/auth/sso/initiate` (фронтенд основного сервісу)
    - External backend redirects to `{MAIN_FRONTEND_URL}/sso/initiate?redirect_uri=...&service=contentzavod`
    - Main CRM frontend handles SSO login
 3. **After successful login:**
-   - Main CRM frontend redirects to `{EXTERNAL_SERVICE_URL}/auth/sso/exchange?code={sso_code}`
-   - External backend exchanges code for service token (JWT RS256)
+   - Main CRM frontend redirects to `{CALLBACK_URL}?code={sso_code}` (на `/sso-callback`)
+   - Frontend calls `POST {EXTERNAL_SERVICE_BACKEND_URL}/auth/sso/exchange` (бекенд стороннього сервісу)
+   - External backend exchanges code for service token (JWT RS256) via main server
    - Service token stored in browser localStorage
 4. **Subsequent requests:**
    - Service token automatically added in `Authorization: Bearer <token>` header

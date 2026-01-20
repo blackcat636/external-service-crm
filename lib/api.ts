@@ -1,8 +1,9 @@
-import { getServiceToken, initiateSSO } from "./auth";
+import { getServiceToken, clearServiceToken } from "./auth";
 import { getTelegramUsername } from "./telegram-auth";
 
-const EXTERNAL_SERVICE_URL =
-  process.env.NEXT_PUBLIC_EXTERNAL_SERVICE_URL || "http://localhost:3001";
+// Бекенд стороннього сервісу (для всіх API запитів)
+const EXTERNAL_SERVICE_BACKEND_URL =
+  process.env.NEXT_PUBLIC_EXTERNAL_SERVICE_BACKEND_URL || "http://localhost:3001";
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
   body?: Record<string, unknown>;
@@ -16,10 +17,7 @@ export async function apiClient<T>(
   const token = getServiceToken();
 
   if (!token) {
-    // Redirect to SSO if not authenticated
-    if (typeof window !== "undefined") {
-      initiateSSO();
-    }
+    console.log("[API] No token found for endpoint:", endpoint);
     throw new Error("Not authenticated");
   }
 
@@ -42,7 +40,7 @@ export async function apiClient<T>(
   // Build full URL
   const fullUrl = endpoint.startsWith("http")
     ? endpoint
-    : `${EXTERNAL_SERVICE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
+    : `${EXTERNAL_SERVICE_BACKEND_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
   const config: RequestInit = {
     ...restOptions,
@@ -55,11 +53,23 @@ export async function apiClient<T>(
 
   const response = await fetch(fullUrl, config);
 
-  // Handle 401 - redirect to SSO
+  // Handle 401 - просто очищаємо токен та перенаправляємо на сторінку авторизації
+  // НЕ викликаємо initiateSSO() - це зробить AuthGuard або login page
   if (response.status === 401) {
-    if (typeof window !== "undefined") {
-      initiateSSO();
-    }
+    console.log("[API] Received 401 for endpoint:", endpoint);
+    
+    // TODO: Uncomment this when we have a proper login page
+    
+    // if (typeof window !== "undefined") {
+    //   // Очищаємо токен при 401 (токен недійсний або прострочений)
+    //   clearServiceToken();
+      
+    //   // Перенаправляємо на сторінку авторизації
+    //   // AuthGuard або login page самі вирішать, чи потрібен SSO
+    //   console.log("[API] Redirecting to login page due to 401");
+    //   window.location.href = "/login";
+    // }
+    
     throw new Error("Authentication required");
   }
 

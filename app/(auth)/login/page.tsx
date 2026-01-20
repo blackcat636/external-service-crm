@@ -88,10 +88,10 @@ function LoginContent() {
           <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-8">
             <div className="text-center mb-6">
               <h2 className="text-xl font-medium text-white mb-2">
-                Увійти в систему
+                Sign in
               </h2>
               <p className="text-sm text-white/50">
-                Авторизуйтесь через сервіс AIPills для доступу до платформи
+                Sign in through AIPills service to access the platform
               </p>
             </div>
 
@@ -102,7 +102,7 @@ function LoginContent() {
               onClick={handleLogin}
             >
               <LogIn className="h-5 w-5 mr-2" />
-              Авторизуватись через сервіс AIPills
+              Sign in through AIPills service
             </Button>
           </div>
         </motion.div>
