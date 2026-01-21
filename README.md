@@ -2,6 +2,8 @@
 
 A web application for tracking creators and their video performance across Instagram (active), Telegram (active), and YouTube (coming soon). Built with Next.js 18, TypeScript, and Tailwind CSS. Features a modern dark theme UI with 3D void effects and custom cursor. All business logic is handled via n8n workflows.
 
+> **🇺🇦 Ukrainian version**: [README_UA.md](./README_UA.md)
+
 ## Tech Stack
 
 - **Frontend**: Next.js 18 (App Router), TypeScript, Tailwind CSS v4
@@ -11,6 +13,30 @@ A web application for tracking creators and their video performance across Insta
 - **Local Storage**: Transcription, unique text, and video generation data stored in browser localStorage
 - **Authentication**: SSO through main CRM server (JWT service tokens)
 - **Hosting**: Self hosted
+
+## 📖 Developer Documentation
+
+### For AI Agents
+
+If you are an AI agent helping a programmer work with the project, please read:
+
+**English:**
+1. **[AI_AGENT_RULES_EN.md](./AI_AGENT_RULES_EN.md)** ⚠️ - **START HERE!** Short list of rules
+2. **[AI_AGENT_GUIDE_EN.md](./AI_AGENT_GUIDE_EN.md)** - Full guide with all rules and examples
+3. **[AI_AGENT_QUICK_REFERENCE_EN.md](./AI_AGENT_QUICK_REFERENCE_EN.md)** - Quick reference for quick start
+4. **[AI_AGENT_CODE_EXAMPLES_EN.md](./AI_AGENT_CODE_EXAMPLES_EN.md)** - Ready-to-use code examples for copying
+
+**Ukrainian:**
+1. **[AI_AGENT_RULES.md](./AI_AGENT_RULES.md)** ⚠️ - **ПОЧНІТЬ З ЦЬОГО!** Короткий список правил
+2. **[AI_AGENT_GUIDE.md](./AI_AGENT_GUIDE.md)** - Повна інструкція з усіма правилами та прикладами
+3. **[AI_AGENT_QUICK_REFERENCE.md](./AI_AGENT_QUICK_REFERENCE.md)** - Швидкий довідник для швидкого початку
+4. **[AI_AGENT_CODE_EXAMPLES.md](./AI_AGENT_CODE_EXAMPLES.md)** - Готові приклади коду для копіювання
+
+> **Important**: 
+> - DO NOT change authentication logic (`lib/auth.ts`, `lib/api.ts`, `hooks/useAuth.ts`)
+> - Use existing hooks for working with data
+> - Create new components and hooks for new features
+> - Follow dark theme and project styling
 
 ## Getting Started
 
@@ -42,10 +68,10 @@ npm run dev
 `.env.local`:
 
 ```env
-# Фронтенд основного сервісу (для SSO initiate)
+# Main service frontend (for SSO initiate)
 NEXT_PUBLIC_EXTERNAL_SERVICE_URL=http://localhost:3000
 
-# Бекенд стороннього сервісу (для SSO exchange та API запитів)
+# External service backend (for SSO exchange and API requests)
 NEXT_PUBLIC_EXTERNAL_SERVICE_BACKEND_URL=http://localhost:3001
 ```
 
@@ -197,12 +223,12 @@ contentzavod/
 
 1. **User opens app** → checks for service token
 2. **If token missing/invalid:**
-   - Frontend redirects to `{EXTERNAL_SERVICE_URL}/auth/sso/initiate` (фронтенд основного сервісу)
+   - Frontend redirects to `{EXTERNAL_SERVICE_URL}/auth/sso/initiate` (main service frontend)
    - External backend redirects to `{MAIN_FRONTEND_URL}/sso/initiate?redirect_uri=...&service=contentzavod`
    - Main CRM frontend handles SSO login
 3. **After successful login:**
-   - Main CRM frontend redirects to `{CALLBACK_URL}?code={sso_code}` (на `/sso-callback`)
-   - Frontend calls `POST {EXTERNAL_SERVICE_BACKEND_URL}/auth/sso/exchange` (бекенд стороннього сервісу)
+   - Main CRM frontend redirects to `{CALLBACK_URL}?code={sso_code}` (to `/sso-callback`)
+   - Frontend calls `POST {EXTERNAL_SERVICE_BACKEND_URL}/auth/sso/exchange` (external service backend)
    - External backend exchanges code for service token (JWT RS256) via main server
    - Service token stored in browser localStorage
 4. **Subsequent requests:**
